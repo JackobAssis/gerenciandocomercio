@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - Gerenciando Comércio</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>💼 Gerenciando</h2>
+            </div>
+            <nav class="menu">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="products.html">📦 Produtos</a>
+                <a href="services.html" class="active">🛠️ Serviços</a>
+                <a href="sales.html">💰 Vendas</a>
+                <a href="reports.html">📈 Relatórios</a>
+                <a href="#" id="configBtn">⚙️ Configurações</a>
+                <a href="#" id="logoutBtn">🚪 Sair</a>
+            </nav>
+            <div class="company-info">
+                <p id="companyName">Carregando...</p>
+                <span id="planBadge" class="badge">FREE</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>🛠️ Gerenciar Serviços</h1>
+                <button class="btn btn-primary" id="addServiceBtn">+ Novo Serviço</button>
+            </header>
+
+            <!-- Filtros -->
+            <div class="filters-section">
+                <input type="text" id="searchService" placeholder="🔍 Buscar serviço..." class="search-input">
+                <select id="filterDuration" class="filter-select">
+                    <option value="">Todas as durações</option>
+                    <option value="short">Rápido (< 30min)</option>
+                    <option value="medium">Médio (30min - 2h)</option>
+                    <option value="long">Longo (> 2h)</option>
+                </select>
+            </div>
+
+            <!-- Grid de Serviços -->
+            <div id="servicesGrid" class="services-grid">
+                <div class="loading-card">Carregando serviços...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Serviço -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Novo Serviço</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="serviceForm">
+                <input type="hidden" id="serviceId">
+                
+                <div class="form-group">
+                    <label for="serviceName">Nome do Serviço *</label>
+                    <input type="text" id="serviceName" required placeholder="Ex: Corte de Cabelo">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="servicePrice">Preço (R$) *</label>
+                        <input type="number" id="servicePrice" step="0.01" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serviceDuration">Duração (minutos) *</label>
+                        <input type="number" id="serviceDuration" min="1" required value="30">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="serviceDescription">Descrição *</label>
+                    <textarea id="serviceDescription" rows="4" required placeholder="Descreva o serviço oferecido..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="serviceActive" checked>
+                        Serviço ativo
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Serviço</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/services.js"></script>
+</body>
+</html>

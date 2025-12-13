@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Gerenciando Comércio</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>💼 Gerenciando</h2>
+            </div>
+            <nav class="menu">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="products.html">📦 Produtos</a>
+                <a href="services.html">🛠️ Serviços</a>
+                <a href="sales.html">💰 Vendas</a>
+                <a href="reports.html" class="active">📈 Relatórios</a>
+                <a href="#" id="configBtn">⚙️ Configurações</a>
+                <a href="#" id="logoutBtn">🚪 Sair</a>
+            </nav>
+            <div class="company-info">
+                <p id="companyName">Carregando...</p>
+                <span id="planBadge" class="badge">FREE</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>📈 Relatórios e Análises</h1>
+                <button class="btn btn-primary" id="exportBtn">📥 Exportar CSV</button>
+            </header>
+
+            <!-- Filtros de Período -->
+            <div class="filters-section">
+                <div class="period-selector">
+                    <button class="period-btn active" data-period="today">Hoje</button>
+                    <button class="period-btn" data-period="week">7 dias</button>
+                    <button class="period-btn" data-period="month">30 dias</button>
+                    <button class="period-btn" data-period="custom">Personalizado</button>
+                </div>
+                
+                <div class="custom-date-range" id="customDateRange" style="display: none;">
+                    <input type="date" id="startDate" class="filter-input">
+                    <span>até</span>
+                    <input type="date" id="endDate" class="filter-input">
+                    <button class="btn btn-secondary" id="applyCustomRange">Aplicar</button>
+                </div>
+            </div>
+
+            <!-- Cards de Resumo -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3>Faturamento</h3>
+                        <p class="stat-value" id="totalRevenue">R$ 0,00</p>
+                        <span class="stat-label">no período</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <h3>Vendas</h3>
+                        <p class="stat-value" id="totalSales">0</p>
+                        <span class="stat-label">transações</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <h3>Produtos Vendidos</h3>
+                        <p class="stat-value" id="totalProducts">0</p>
+                        <span class="stat-label">unidades</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🛠️</div>
+                    <div class="stat-info">
+                        <h3>Serviços</h3>
+                        <p class="stat-value" id="totalServices">0</p>
+                        <span class="stat-label">realizados</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>💰 Vendas por Dia</h3>
+                    <canvas id="salesByDayChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>💳 Formas de Pagamento</h3>
+                    <canvas id="paymentMethodsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>📦 Produtos Mais Vendidos (Top 10)</h3>
+                    <canvas id="topProductsChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>🛠️ Serviços Mais Solicitados (Top 10)</h3>
+                    <canvas id="topServicesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabela Detalhada -->
+            <div class="table-section">
+                <h3>📋 Vendas Detalhadas</h3>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Cliente</th>
+                                <th>Itens</th>
+                                <th>Total</th>
+                                <th>Desconto</th>
+                                <th>Pagamento</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailedSalesBody">
+                            <tr>
+                                <td colspan="6" class="loading">Carregando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/reports.js"></script>
+</body>
+</html>

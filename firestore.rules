@@ -1,0 +1,121 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Função auxiliar para verificar autenticação
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Função para verificar se o usuário pertence à empresa
+    function belongsToCompany(companyId) {
+      return isAuthenticated() && 
+             request.auth.token.companyId == companyId;
+    }
+    
+    // Função para verificar se é admin da empresa
+    function isAdmin(companyId) {
+      return belongsToCompany(companyId) && 
+             request.auth.token.role == 'admin';
+    }
+    
+    // Função para verificar se é master admin (global)
+    function isMasterAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.masterAdmin == true;
+    }
+    
+    // ===========================================
+    // REGRAS PARA EMPRESAS (COMPANIES)
+    // ===========================================
+    match /companies/{companyId} {
+      
+      // Ler dados da empresa: apenas usuários da empresa ou master admin
+      allow read: if belongsToCompany(companyId) || isMasterAdmin();
+      
+      // Criar empresa: apenas durante cadastro (via API segura)
+      // Atualizar: apenas admin da empresa ou master admin
+      allow update: if isAdmin(companyId) || isMasterAdmin();
+      
+      // Deletar: apenas master admin
+      allow delete: if isMasterAdmin();
+      
+      // ===========================================
+      // SUBCOLEÇÃO: USERS
+      // ===========================================
+      match /users/{userId} {
+        // Ler: usuários da mesma empresa
+        allow read: if belongsToCompany(companyId);
+        
+        // Criar/atualizar/deletar: apenas admin da empresa
+        allow create, update, delete: if isAdmin(companyId) || isMasterAdmin();
+      }
+      
+      // ===========================================
+      // SUBCOLEÇÃO: PRODUCTS
+      // ===========================================
+      match /products/{productId} {
+        // Ler: todos da empresa
+        allow read: if belongsToCompany(companyId);
+        
+        // Criar/atualizar/deletar: todos da empresa (admin e funcionários)
+        allow create, update, delete: if belongsToCompany(companyId);
+      }
+      
+      // ===========================================
+      // SUBCOLEÇÃO: SERVICES
+      // ===========================================
+      match /services/{serviceId} {
+        // Ler: todos da empresa
+        allow read: if belongsToCompany(companyId);
+        
+        // Criar/atualizar/deletar: todos da empresa
+        allow create, update, delete: if belongsToCompany(companyId);
+      }
+      
+      // ===========================================
+      // SUBCOLEÇÃO: SALES
+      // ===========================================
+      match /sales/{saleId} {
+        // Ler: todos da empresa
+        allow read: if belongsToCompany(companyId);
+        
+        // Criar: todos da empresa podem registrar vendas
+        allow create: if belongsToCompany(companyId) &&
+                        request.resource.data.userId == request.auth.uid &&
+                        request.resource.data.createdAt == request.time;
+        
+        // Atualizar/deletar: apenas admin
+        allow update, delete: if isAdmin(companyId);
+      }
+      
+      // ===========================================
+      // SUBCOLEÇÃO: LOGS (Auditoria)
+      // ===========================================
+      match /logs/{logId} {
+        // Ler: todos da empresa
+        allow read: if belongsToCompany(companyId);
+        
+        // Criar: todos da empresa (apenas seus próprios logs)
+        allow create: if belongsToCompany(companyId) &&
+                        request.resource.data.userId == request.auth.uid &&
+                        request.resource.data.createdAt == request.time;
+        
+        // Não permite atualizar ou deletar logs (auditoria)
+        allow update, delete: if false;
+      }
+    }
+    
+    // ===========================================
+    // COLEÇÃO DE MASTER ADMIN (GLOBAL)
+    // ===========================================
+    match /admin/{document=**} {
+      allow read, write: if isMasterAdmin();
+    }
+    
+    // Bloquear acesso a qualquer outro documento
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

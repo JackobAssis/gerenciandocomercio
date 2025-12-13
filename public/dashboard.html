@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Gerenciando Comércio</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon">🏪</div>
+          <span>GComércio</span>
+        </div>
+        <div class="company-info">
+          <div class="company-name" id="companyName">Carregando...</div>
+          <div class="company-plan">
+            <span class="badge badge-success" id="companyPlan">Free</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Principal</div>
+          <a href="dashboard.html" class="nav-link active">
+            <span class="nav-icon">📊</span>
+            Dashboard
+          </a>
+          <a href="products.html" class="nav-link">
+            <span class="nav-icon">📦</span>
+            Produtos
+          </a>
+          <a href="services.html" class="nav-link">
+            <span class="nav-icon">⚙️</span>
+            Serviços
+          </a>
+          <a href="sales.html" class="nav-link">
+            <span class="nav-icon">💰</span>
+            Vendas
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Análises</div>
+          <a href="reports.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            Relatórios
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Configurações</div>
+          <a href="settings.html" class="nav-link">
+            <span class="nav-icon">⚙️</span>
+            Configurações
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div class="user-details">
+            <div class="user-name" id="userName">Usuário</div>
+            <div class="user-role" id="userRole">admin</div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="logoutBtn" style="width: 100%;">
+          🚪 Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">Visão geral do seu negócio</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline" id="refreshBtn">
+            🔄 Atualizar
+          </button>
+          <button class="btn btn-primary" id="newSaleBtn">
+            + Nova Venda
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Faturamento Total</span>
+            <span class="stat-icon">💵</span>
+          </div>
+          <div class="stat-value" id="totalRevenue">R$ 0,00</div>
+          <div class="stat-change positive">
+            <span>↑</span>
+            <span id="revenueChange">0%</span> vs. mês anterior
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Vendas Hoje</span>
+            <span class="stat-icon">📊</span>
+          </div>
+          <div class="stat-value" id="salesToday">0</div>
+          <div class="stat-change positive">
+            <span>↑</span>
+            <span id="salesTodayChange">0</span> vendas
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Produtos Cadastrados</span>
+            <span class="stat-icon">📦</span>
+          </div>
+          <div class="stat-value" id="totalProducts">0</div>
+          <div class="stat-change">
+            <span id="lowStockCount">0</span> com estoque baixo
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Ticket Médio</span>
+            <span class="stat-icon">💰</span>
+          </div>
+          <div class="stat-value" id="avgTicket">R$ 0,00</div>
+          <div class="stat-change">
+            Média das vendas
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row">
+        <div class="col-2">
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3 class="chart-title">Vendas dos Últimos 7 Dias</h3>
+              <select class="form-select" id="salesPeriod" style="width: auto;">
+                <option value="7">7 dias</option>
+                <option value="15">15 dias</option>
+                <option value="30" selected>30 dias</option>
+              </select>
+            </div>
+            <canvas id="salesChart" class="chart-canvas"></canvas>
+          </div>
+        </div>
+
+        <div class="col-2">
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3 class="chart-title">Formas de Pagamento</h3>
+            </div>
+            <canvas id="paymentChart" class="chart-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tables Row -->
+      <div class="row">
+        <div class="col-2">
+          <div class="data-table-container">
+            <div class="data-table-header">
+              <h3 class="data-table-title">Produtos Mais Vendidos</h3>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Vendas</th>
+                    <th>Receita</th>
+                  </tr>
+                </thead>
+                <tbody id="topProductsTable">
+                  <tr>
+                    <td colspan="3" class="text-center text-muted">Carregando...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-2">
+          <div class="data-table-container">
+            <div class="data-table-header">
+              <h3 class="data-table-title">Últimas Vendas</h3>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Total</th>
+                    <th>Pagamento</th>
+                  </tr>
+                </thead>
+                <tbody id="recentSalesTable">
+                  <tr>
+                    <td colspan="3" class="text-center text-muted">Carregando...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estoque Baixo -->
+      <div class="data-table-container">
+        <div class="data-table-header">
+          <h3 class="data-table-title">⚠️ Produtos com Estoque Baixo</h3>
+          <button class="btn btn-sm btn-primary" onclick="window.location.href='products.html'">
+            Ver Todos os Produtos
+          </button>
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Estoque Atual</th>
+                <th>Preço</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="lowStockTable">
+              <tr>
+                <td colspan="5" class="text-center text-muted">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- App Scripts -->
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

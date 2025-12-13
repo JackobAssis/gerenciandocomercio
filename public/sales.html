@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendas - Gerenciando Comércio</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>💼 Gerenciando</h2>
+            </div>
+            <nav class="menu">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="products.html">📦 Produtos</a>
+                <a href="services.html">🛠️ Serviços</a>
+                <a href="sales.html" class="active">💰 Vendas</a>
+                <a href="reports.html">📈 Relatórios</a>
+                <a href="#" id="configBtn">⚙️ Configurações</a>
+                <a href="#" id="logoutBtn">🚪 Sair</a>
+            </nav>
+            <div class="company-info">
+                <p id="companyName">Carregando...</p>
+                <span id="planBadge" class="badge">FREE</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>💰 Nova Venda</h1>
+                <button class="btn btn-secondary" id="viewSalesBtn">📋 Ver Histórico</button>
+            </header>
+
+            <div class="sales-container">
+                <!-- Seleção de Itens -->
+                <div class="items-section">
+                    <h3>Adicionar Itens</h3>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="products">📦 Produtos</button>
+                        <button class="tab-btn" data-tab="services">🛠️ Serviços</button>
+                    </div>
+
+                    <!-- Tab Produtos -->
+                    <div class="tab-content active" id="products-tab">
+                        <input type="text" id="searchProduct" placeholder="🔍 Buscar produto..." class="search-input">
+                        <div id="productsList" class="items-list">
+                            <p class="loading">Carregando produtos...</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab Serviços -->
+                    <div class="tab-content" id="services-tab">
+                        <input type="text" id="searchService" placeholder="🔍 Buscar serviço..." class="search-input">
+                        <div id="servicesList" class="items-list">
+                            <p class="loading">Carregando serviços...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carrinho -->
+                <div class="cart-section">
+                    <h3>Carrinho de Venda</h3>
+                    
+                    <div id="cartItems" class="cart-items">
+                        <p class="empty-cart">Nenhum item adicionado</p>
+                    </div>
+
+                    <div class="cart-summary">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <strong id="subtotal">R$ 0,00</strong>
+                        </div>
+                        <div class="summary-row">
+                            <label>
+                                Desconto (%):
+                                <input type="number" id="discountPercent" min="0" max="100" value="0" step="0.1">
+                            </label>
+                            <strong id="discountValue">- R$ 0,00</strong>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <strong id="totalValue">R$ 0,00</strong>
+                        </div>
+                    </div>
+
+                    <div class="payment-section">
+                        <label for="paymentMethod">Forma de Pagamento:</label>
+                        <select id="paymentMethod" class="form-select">
+                            <option value="Dinheiro">💵 Dinheiro</option>
+                            <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
+                            <option value="Cartão de Débito">💳 Cartão de Débito</option>
+                            <option value="PIX">📱 PIX</option>
+                            <option value="Boleto">📄 Boleto</option>
+                        </select>
+
+                        <label for="customerName">Cliente (opcional):</label>
+                        <input type="text" id="customerName" placeholder="Nome do cliente" class="form-input">
+
+                        <label for="saleNotes">Observações:</label>
+                        <textarea id="saleNotes" rows="2" placeholder="Notas sobre a venda..." class="form-input"></textarea>
+                    </div>
+
+                    <div class="cart-actions">
+                        <button class="btn btn-secondary" id="clearCartBtn">🗑️ Limpar</button>
+                        <button class="btn btn-primary" id="finalizeSaleBtn" disabled>✅ Finalizar Venda</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Histórico de Vendas -->
+    <div id="salesHistoryModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>📋 Histórico de Vendas</h2>
+                <button class="close-modal" id="closeSalesModal">&times;</button>
+            </div>
+            
+            <div class="filters-section">
+                <input type="date" id="filterDateFrom" class="filter-input">
+                <input type="date" id="filterDateTo" class="filter-input">
+                <button class="btn btn-secondary" id="applyFilterBtn">Filtrar</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Itens</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                            <th>Cliente</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesHistoryBody">
+                        <tr>
+                            <td colspan="6" class="loading">Carregando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes da Venda -->
+    <div id="saleDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📄 Detalhes da Venda</h2>
+                <button class="close-modal" id="closeDetailsModal">&times;</button>
+            </div>
+            <div id="saleDetailsContent"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/sales.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "gerenciando-comercio-saas",
+  "version": "1.0.0",
+  "description": "Sistema SaaS Multi-Tenant para Gestão de Comércios",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Build completed'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["saas", "multi-tenant", "firebase", "vercel"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.0"
+  }
+}

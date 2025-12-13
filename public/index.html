@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciando Comércio - Sistema SaaS para Gestão Comercial</title>
+  <meta name="description" content="Sistema completo de gestão para comércios formais e informais. Controle produtos, serviços, vendas e relatórios em um único lugar.">
+  <link rel="stylesheet" href="../css/global.css">
+  <style>
+    /* Landing Page Específico */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: 
+        linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 255, 136, 0) 50%),
+        var(--bg-primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.1); opacity: 0.5; }
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-text h1 {
+      font-size: 3.5rem;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .hero-text .highlight {
+      color: var(--accent-primary);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-text .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent-primary);
+      box-shadow: 0 0 10px var(--accent-primary);
+    }
+
+    .hero-text p {
+      font-size: 1.25rem;
+      margin-bottom: 32px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-form {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .form-header h2 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .form-header p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .features {
+      padding: 80px 20px;
+      background: var(--bg-secondary);
+    }
+
+    .features-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 60px;
+    }
+
+    .features-header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 32px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-glow);
+      border-color: var(--accent-primary);
+    }
+
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(0, 255, 136, 0.1);
+      color: var(--accent-primary);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .pricing {
+      padding: 80px 20px;
+      background: var(--bg-primary);
+    }
+
+    .pricing-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 60px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent-primary);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .pricing-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .pricing-plan {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .pricing-price {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 8px;
+    }
+
+    .pricing-price span {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin: 32px 0;
+      text-align: left;
+    }
+
+    .pricing-features li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pricing-features li:last-child {
+      border-bottom: none;
+    }
+
+    .check-icon {
+      color: var(--accent-primary);
+      font-weight: 700;
+    }
+
+    .footer {
+      padding: 40px 20px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .footer p {
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 968px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .pricing-card.featured {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>
+          Gerencie seu comércio com <span class="highlight">inteligência</span>
+        </h1>
+        <p>
+          Sistema completo de gestão para produtos, serviços, vendas e relatórios. 
+          Simples, rápido e profissional. Comece gratuitamente em menos de 2 minutos.
+        </p>
+        <div class="hero-buttons">
+          <a href="#signup" class="btn btn-primary btn-lg">
+            🚀 Criar minha conta grátis
+          </a>
+          <a href="login.html" class="btn btn-outline btn-lg">
+            🔑 Já tenho conta
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulário de Cadastro -->
+      <div class="hero-form" id="signup">
+        <div class="form-header">
+          <h2>Crie sua conta</h2>
+          <p>Sem cartão de crédito. Sem burocracia.</p>
+        </div>
+
+        <form id="signupForm">
+          <div class="form-group">
+            <label class="form-label">Nome da Empresa</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              id="companyName" 
+              placeholder="Ex: Loja do João"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Seu Nome</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              id="userName" 
+              placeholder="Ex: João Silva"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input 
+              type="email" 
+              class="form-input" 
+              id="email" 
+              placeholder="seu@email.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Senha</label>
+            <input 
+              type="password" 
+              class="form-input" 
+              id="password" 
+              placeholder="Mínimo 6 caracteres"
+              required
+              minlength="6"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirmar Senha</label>
+            <input 
+              type="password" 
+              class="form-input" 
+              id="confirmPassword" 
+              placeholder="Digite a senha novamente"
+              required
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" id="signupBtn">
+            <span id="signupBtnText">Criar minha empresa</span>
+            <span class="loading hidden" id="signupLoading"></span>
+          </button>
+
+          <p class="text-center mt-3 text-muted" style="font-size: 0.75rem;">
+            Ao criar uma conta, você concorda com nossos Termos de Uso
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="features-header">
+      <h2>Tudo que você precisa em um só lugar</h2>
+      <p>Recursos profissionais para gestão completa do seu negócio</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>Gestão de Produtos</h3>
+        <p>Controle completo de estoque, preços e categorias com alertas inteligentes de estoque baixo.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h3>Serviços</h3>
+        <p>Gerencie serviços prestados, valores e descrições de forma simples e organizada.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Controle de Vendas</h3>
+        <p>Registre vendas rapidamente, atualize estoque automaticamente e acompanhe formas de pagamento.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Relatórios Inteligentes</h3>
+        <p>Dashboards completos com faturamento, produtos mais vendidos e gráficos em tempo real.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>Multi-Usuários</h3>
+        <p>Adicione funcionários com permissões controladas para maior segurança.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Segurança Total</h3>
+        <p>Seus dados protegidos com criptografia e backup automático na nuvem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing">
+    <div class="pricing-header">
+      <h2>Escolha o plano ideal</h2>
+      <p>Comece grátis e evolua conforme cresce</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan">Free</div>
+        <div class="pricing-price">R$ 0<span>/mês</span></div>
+        <ul class="pricing-features">
+          <li><span class="check-icon">✓</span> Até 100 produtos</li>
+          <li><span class="check-icon">✓</span> Vendas ilimitadas</li>
+          <li><span class="check-icon">✓</span> 1 usuário</li>
+          <li><span class="check-icon">✓</span> Relatórios básicos</li>
+        </ul>
+        <a href="#signup" class="btn btn-secondary btn-lg">Começar Grátis</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Mais Popular</div>
+        <div class="pricing-plan">Pro</div>
+        <div class="pricing-price">R$ 49<span>/mês</span></div>
+        <ul class="pricing-features">
+          <li><span class="check-icon">✓</span> Produtos ilimitados</li>
+          <li><span class="check-icon">✓</span> Vendas ilimitadas</li>
+          <li><span class="check-icon">✓</span> Até 5 usuários</li>
+          <li><span class="check-icon">✓</span> Relatórios avançados</li>
+          <li><span class="check-icon">✓</span> Exportação de dados</li>
+          <li><span class="check-icon">✓</span> Suporte prioritário</li>
+        </ul>
+        <a href="#signup" class="btn btn-primary btn-lg">Começar Pro</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-plan">Premium</div>
+        <div class="pricing-price">R$ 99<span>/mês</span></div>
+        <ul class="pricing-features">
+          <li><span class="check-icon">✓</span> Tudo do Pro</li>
+          <li><span class="check-icon">✓</span> Usuários ilimitados</li>
+          <li><span class="check-icon">✓</span> API de integração</li>
+          <li><span class="check-icon">✓</span> Customizações</li>
+          <li><span class="check-icon">✓</span> Suporte dedicado</li>
+        </ul>
+        <a href="#signup" class="btn btn-secondary btn-lg">Começar Premium</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Gerenciando Comércio. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- App Scripts -->
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script>
+    // Sistema de Cadastro de Empresa
+    const signupForm = document.getElementById('signupForm');
+    const signupBtn = document.getElementById('signupBtn');
+    const signupBtnText = document.getElementById('signupBtnText');
+    const signupLoading = document.getElementById('signupLoading');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Pegar dados do formulário
+      const companyName = document.getElementById('companyName').value.trim();
+      const userName = document.getElementById('userName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      // Validações
+      if (!companyName || !userName || !email || !password) {
+        showAlert('Por favor, preencha todos os campos', 'error');
+        return;
+      }
+
+      if (password.length < 6) {
+        showAlert('A senha deve ter no mínimo 6 caracteres', 'error');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showAlert('As senhas não coincidem', 'error');
+        return;
+      }
+
+      // Desabilitar botão
+      signupBtn.disabled = true;
+      signupBtnText.classList.add('hidden');
+      signupLoading.classList.remove('hidden');
+      loadingOverlay.classList.add('active');
+
+      try {
+        // 1. Criar usuário no Firebase Auth
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        // 2. Gerar ID único para a empresa
+        const companyId = db.collection('companies').doc().id;
+
+        // 3. Criar documento da empresa
+        await db.collection('companies').doc(companyId).set({
+          name: companyName,
+          plan: 'free',
+          status: 'active',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          ownerId: user.uid
+        });
+
+        // 4. Criar usuário admin no Firestore
+        await db.collection('companies').doc(companyId).collection('users').doc(user.uid).set({
+          name: userName,
+          email: email,
+          role: 'admin',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // 5. Configurar custom claims via API
+        await fetch('/api/setCustomClaims', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            uid: user.uid,
+            companyId: companyId,
+            role: 'admin'
+          })
+        });
+
+        // 6. Criar log de auditoria
+        await db.collection('companies').doc(companyId).collection('logs').add({
+          action: 'company_created',
+          userId: user.uid,
+          details: { companyName, userName },
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // 7. Atualizar perfil do usuário
+        await user.updateProfile({
+          displayName: userName
+        });
+
+        showAlert('Conta criada com sucesso! Redirecionando...', 'success');
+
+        // 8. Redirecionar para dashboard
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1500);
+
+      } catch (error) {
+        console.error('Erro ao criar conta:', error);
+        
+        let errorMessage = 'Erro ao criar conta. Tente novamente.';
+        
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = 'Este email já está em uso.';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = 'Email inválido.';
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = 'Senha muito fraca.';
+        }
+
+        showAlert(errorMessage, 'error');
+        
+        signupBtn.disabled = false;
+        signupBtnText.classList.remove('hidden');
+        signupLoading.classList.add('hidden');
+        loadingOverlay.classList.remove('active');
+      }
+    });
+
+    // Função para mostrar alertas
+    function showAlert(message, type) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      
+      signupForm.insertBefore(alertDiv, signupForm.firstChild);
+      
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 5000);
+    }
+
+    // Smooth scroll para o formulário
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
