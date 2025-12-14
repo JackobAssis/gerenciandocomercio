@@ -23,6 +23,8 @@ Value: gerenciandocomercio
 Environment: Production, Preview, Development
 ```
 
+✅ **Valor correto já configurado no vercel.json**
+
 #### Variável 2: FIREBASE_CLIENT_EMAIL
 ```
 Name: FIREBASE_CLIENT_EMAIL

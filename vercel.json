@@ -21,8 +21,8 @@
     }
   ],
   "env": {
-    "FIREBASE_PROJECT_ID": "@firebase_project_id",
-    "FIREBASE_CLIENT_EMAIL": "@firebase_client_email",
-    "FIREBASE_PRIVATE_KEY": "@firebase_private_key"
+    "FIREBASE_PROJECT_ID": "gerenciandocomercio",
+    "FIREBASE_CLIENT_EMAIL": "",
+    "FIREBASE_PRIVATE_KEY": ""
   }
 }
