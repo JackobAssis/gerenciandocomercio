@@ -19,6 +19,41 @@ service cloud.firestore {
              request.auth.token.role == 'admin';
     }
     
+    // ==========================================
+    // COLEÇÃO: USERS (público - apenas leitura própria)
+    // ==========================================
+    match /users/{userId} {
+      // Permitir criar durante cadastro
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      // Ler/atualizar apenas os próprios dados
+      allow read, update: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if false; // Usuários não podem se deletar
+    }
+    
+    // ==========================================
+    // COLEÇÃO: COMPANIES (empresas)
+    // ==========================================
+    match /companies/{companyId} {
+      // Permitir criar durante cadastro (qualquer usuário autenticado)
+      allow create: if isAuthenticated();
+      
+      // Ler/modificar apenas membros da empresa
+      allow read, update: if belongsToCompany(companyId);
+      allow delete: if isAdmin(companyId);
+      
+      // Subcoleções da empresa
+      match /{subcollection}/{document} {
+        allow read, write: if belongsToCompany(companyId);
+        
+        // Dentro das subcoleções, permitir acesso a documentos aninhados
+        match /{allSubPaths=**} {
+          allow read, write: if belongsToCompany(companyId);
+        }
+      }
+    }
+  }
+}
+    
     // Função para verificar se é master admin (global)
     function isMasterAdmin() {
       return isAuthenticated() && 
