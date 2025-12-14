@@ -78,10 +78,15 @@
 
     <!-- Main Content -->
     <main class="main-content">
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <span>☰</span>
+      </button>
+
       <div class="page-header">
         <div>
           <h1 class="page-title">Dashboard</h1>
-          <p class="page-subtitle">Visão geral do seu negócio</p>
+          <p class="page-subtitle">Visão geral do seu negócio em tempo real</p>
         </div>
         <div class="page-actions">
           <button class="btn btn-outline" id="refreshBtn">
@@ -249,9 +254,6 @@
     </main>
   </div>
 
-  <!-- Mobile Menu Button -->
-  <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-spinner"></div>
@@ -268,6 +270,28 @@
   <!-- App Scripts -->
   <script src="../js/firebase-config.js"></script>
   <script src="../js/utils.js"></script>
+  <script src="../js/dashboard.js"></script>
+
+  <script>
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    if (mobileMenuToggle) {
+      mobileMenuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+      });
+
+      // Fechar sidebar ao clicar fora (mobile)
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            sidebar.classList.remove('active');
+          }
+        }
+      });
+    }
+  </script>
   <script src="../js/auth.js"></script>
   <script src="../js/dashboard.js"></script>
 </body>
