@@ -2,6 +2,86 @@
 // FUNÇÕES UTILITÁRIAS GLOBAIS
 // ========================================
 
+// ========================================
+// AUTH MANAGER
+// ========================================
+
+window.authManager = {
+  /**
+   * Verifica autenticação do usuário
+   */
+  async checkAuth(requireAuth = true) {
+    const { auth, db } = window.firebaseApp;
+    
+    return new Promise((resolve, reject) => {
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          if (requireAuth) {
+            window.location.href = 'login.html';
+          }
+          reject(new Error('Usuário não autenticado'));
+          return;
+        }
+
+        try {
+          // Buscar dados do token
+          const tokenResult = await user.getIdTokenResult(true);
+          const companyId = tokenResult.claims.companyId;
+          const role = tokenResult.claims.role;
+
+          if (!companyId) {
+            throw new Error('Usuário sem empresa associada');
+          }
+
+          // Buscar dados do usuário no Firestore
+          const userDoc = await db.collection('companies').doc(companyId)
+            .collection('users').doc(user.uid).get();
+
+          if (!userDoc.exists) {
+            throw new Error('Dados do usuário não encontrados');
+          }
+
+          const userData = {
+            uid: user.uid,
+            email: user.email,
+            name: userDoc.data().name || user.displayName,
+            role: role,
+            ...userDoc.data()
+          };
+
+          resolve({
+            user,
+            userData,
+            companyId,
+            role
+          });
+        } catch (error) {
+          console.error('Erro ao verificar autenticação:', error);
+          if (requireAuth) {
+            alert(error.message);
+            window.location.href = 'login.html';
+          }
+          reject(error);
+        }
+      });
+    });
+  },
+
+  /**
+   * Faz logout do usuário
+   */
+  async logout() {
+    const { auth } = window.firebaseApp;
+    try {
+      await auth.signOut();
+      window.location.href = 'login.html';
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      alert('Erro ao fazer logout. Tente novamente.');
+    }
+  }
+};
+
 /**
  * Formata valor em moeda brasileira
  */
