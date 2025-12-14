@@ -19,6 +19,12 @@ service cloud.firestore {
              request.auth.token.role == 'admin';
     }
     
+    // Função para verificar se é o dono da empresa (durante criação inicial)
+    function isOwner(companyId) {
+      return isAuthenticated() && 
+             request.resource.data.ownerId == request.auth.uid;
+    }
+    
     // ==========================================
     // COLEÇÃO: USERS (público - apenas leitura própria)
     // ==========================================
@@ -35,19 +41,24 @@ service cloud.firestore {
     // ==========================================
     match /companies/{companyId} {
       // Permitir criar durante cadastro (qualquer usuário autenticado)
-      allow create: if isAuthenticated();
+      // E o usuário deve ser o ownerId da empresa
+      allow create: if isAuthenticated() && isOwner(companyId);
       
       // Ler/modificar apenas membros da empresa
-      allow read, update: if belongsToCompany(companyId);
+      allow read, update: if belongsToCompany(companyId) || isOwner(companyId);
       allow delete: if isAdmin(companyId);
       
-      // Subcoleções da empresa
+      // Subcoleções da empresa (users, logs, etc)
       match /{subcollection}/{document} {
-        allow read, write: if belongsToCompany(companyId);
+        // Durante criação inicial, permitir se for o owner
+        // Depois, apenas membros da empresa
+        allow read, write: if belongsToCompany(companyId) || 
+                             get(/databases/$(database)/documents/companies/$(companyId)).data.ownerId == request.auth.uid;
         
         // Dentro das subcoleções, permitir acesso a documentos aninhados
         match /{allSubPaths=**} {
-          allow read, write: if belongsToCompany(companyId);
+          allow read, write: if belongsToCompany(companyId) || 
+                               get(/databases/$(database)/documents/companies/$(companyId)).data.ownerId == request.auth.uid;
         }
       }
     }
