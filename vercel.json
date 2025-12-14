@@ -1,14 +1,8 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/public/$1"
-    }
-  ],
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "env": {
     "FIREBASE_PROJECT_ID": "gerenciandocomercio",
     "FIREBASE_CLIENT_EMAIL": "",
