@@ -613,11 +613,15 @@
         let errorMessage = 'Erro ao criar conta. Tente novamente.';
         
         if (error.code === 'auth/email-already-in-use') {
-          errorMessage = 'Este email já está em uso.';
+          errorMessage = '⚠️ Este email já está cadastrado. Faça login ou use outro email.';
         } else if (error.code === 'auth/invalid-email') {
-          errorMessage = 'Email inválido.';
+          errorMessage = '❌ Email inválido. Verifique e tente novamente.';
         } else if (error.code === 'auth/weak-password') {
-          errorMessage = 'Senha muito fraca.';
+          errorMessage = '🔒 Senha muito fraca. Use no mínimo 6 caracteres.';
+        } else if (error.code === 'auth/operation-not-allowed') {
+          errorMessage = '⚠️ Cadastro não permitido. Entre em contato com o suporte.';
+        } else if (error.code === 'auth/network-request-failed') {
+          errorMessage = '🌐 Erro de conexão. Verifique sua internet.';
         }
 
         showAlert(errorMessage, 'error');
