@@ -26,8 +26,34 @@ window.authManager = {
         try {
           // Buscar dados do token
           const tokenResult = await user.getIdTokenResult(true);
-          const companyId = tokenResult.claims.companyId;
-          const role = tokenResult.claims.role;
+          let companyId = tokenResult.claims.companyId;
+          let role = tokenResult.claims.role;
+
+          // FALLBACK: Se não tiver companyId no token, buscar no Firestore
+          if (!companyId) {
+            console.log('CompanyId não encontrado no token. Buscando no Firestore...');
+            
+            // Buscar em todas as empresas onde o usuário é owner
+            const companiesSnapshot = await db.collection('companies')
+              .where('ownerId', '==', user.uid)
+              .limit(1)
+              .get();
+
+            if (!companiesSnapshot.empty) {
+              const companyDoc = companiesSnapshot.docs[0];
+              companyId = companyDoc.id;
+              
+              // Buscar role do usuário
+              const userDoc = await db.collection('companies').doc(companyId)
+                .collection('users').doc(user.uid).get();
+              
+              if (userDoc.exists) {
+                role = userDoc.data().role || 'admin';
+              }
+              
+              console.log('Dados encontrados no Firestore:', { companyId, role });
+            }
+          }
 
           if (!companyId) {
             throw new Error('Usuário sem empresa associada');
