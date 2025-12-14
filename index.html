@@ -507,10 +507,13 @@
   <script src="js/utils.js"></script>
   <script>
     // Aguardar carregamento do Firebase
-    if (typeof firebase === 'undefined' || typeof auth === 'undefined' || typeof db === 'undefined') {
+    if (typeof firebase === 'undefined' || !window.firebaseApp) {
       console.error('Firebase não carregado corretamente. Verifique firebase-config.js');
       alert('Erro ao carregar o sistema. Recarregue a página.');
     }
+
+    // Extrair instâncias do Firebase
+    const { auth, db } = window.firebaseApp;
 
     // Sistema de Cadastro de Empresa
     const signupForm = document.getElementById('signupForm');
