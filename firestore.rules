@@ -13,53 +13,46 @@ service cloud.firestore {
              request.auth.token.companyId == companyId;
     }
     
-    // Função para verificar se é admin da empresa
-    function isAdmin(companyId) {
-      return belongsToCompany(companyId) && 
-             request.auth.token.role == 'admin';
-    }
-    
-    // Função para verificar se é o dono da empresa (durante criação inicial)
-    function isOwner(companyId) {
-      return isAuthenticated() && 
-             request.resource.data.ownerId == request.auth.uid;
-    }
-    
     // ==========================================
     // COLEÇÃO: USERS (público - apenas leitura própria)
     // ==========================================
     match /users/{userId} {
-      // Permitir criar durante cadastro
       allow create: if isAuthenticated() && request.auth.uid == userId;
-      // Ler/atualizar apenas os próprios dados
       allow read, update: if isAuthenticated() && request.auth.uid == userId;
-      allow delete: if false; // Usuários não podem se deletar
+      allow delete: if false;
     }
     
     // ==========================================
     // COLEÇÃO: COMPANIES (empresas)
     // ==========================================
     match /companies/{companyId} {
-      // Permitir criar durante cadastro (qualquer usuário autenticado)
-      // E o usuário deve ser o ownerId da empresa
-      allow create: if isAuthenticated() && isOwner(companyId);
+      // CRIAÇÃO: Permitir se autenticado e for o dono
+      allow create: if isAuthenticated() && 
+                      request.resource.data.ownerId == request.auth.uid;
       
-      // Ler/modificar apenas membros da empresa
-      allow read, update: if belongsToCompany(companyId) || isOwner(companyId);
-      allow delete: if isAdmin(companyId);
+      // LEITURA/ATUALIZAÇÃO: Permitir se pertence à empresa OU é o dono
+      allow read: if isAuthenticated() && 
+                    (belongsToCompany(companyId) || 
+                     resource.data.ownerId == request.auth.uid);
       
-      // Subcoleções da empresa (users, logs, etc)
-      match /{subcollection}/{document} {
-        // Durante criação inicial, permitir se for o owner
-        // Depois, apenas membros da empresa
-        allow read, write: if belongsToCompany(companyId) || 
-                             get(/databases/$(database)/documents/companies/$(companyId)).data.ownerId == request.auth.uid;
-        
-        // Dentro das subcoleções, permitir acesso a documentos aninhados
-        match /{allSubPaths=**} {
-          allow read, write: if belongsToCompany(companyId) || 
-                               get(/databases/$(database)/documents/companies/$(companyId)).data.ownerId == request.auth.uid;
-        }
+      allow update: if isAuthenticated() && 
+                      (belongsToCompany(companyId) || 
+                       resource.data.ownerId == request.auth.uid);
+      
+      allow delete: if isAuthenticated() && 
+                      belongsToCompany(companyId) && 
+                      request.auth.token.role == 'admin';
+      
+      // ==========================================
+      // SUBCOLEÇÕES (users, logs, products, etc)
+      // ==========================================
+      match /{subcollection}/{document=**} {
+        // Permitir acesso total se:
+        // 1. Pertence à empresa (tem companyId no token)
+        // 2. É o dono da empresa (ownerId)
+        allow read, write: if isAuthenticated() && 
+                             (belongsToCompany(companyId) || 
+                              get(/databases/$(database)/documents/companies/$(companyId)).data.ownerId == request.auth.uid);
       }
     }
   }
