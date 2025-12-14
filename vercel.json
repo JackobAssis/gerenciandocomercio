@@ -1,11 +1,4 @@
 {
-  "buildCommand": null,
-  "outputDirectory": "public",
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "env": {
-    "FIREBASE_PROJECT_ID": "gerenciandocomercio",
-    "FIREBASE_CLIENT_EMAIL": "",
-    "FIREBASE_PRIVATE_KEY": ""
-  }
+  "version": 2,
+  "public": true
 }
