@@ -14,16 +14,12 @@ const firebaseConfig = {
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Instâncias globais
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// Configurações
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-// Exportar para uso global
+// Exportar para uso global (sem declarar variáveis locais)
 window.firebaseApp = {
-  auth,
-  db,
+  auth: firebase.auth(),
+  db: firebase.firestore(),
   firebase
 };
+
+// Configurar persistência padrão
+window.firebaseApp.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
