@@ -2,10 +2,6 @@
 // DASHBOARD - MÉTRICAS E GRÁFICOS
 // ========================================
 
-const { utils } = window;
-const { checkAuth, logout } = window.authManager;
-const { auth, db } = window.firebaseApp;
-
 let currentUser = null;
 let companyId = null;
 let salesChart = null;
@@ -17,6 +13,11 @@ let paymentChart = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    // Extrair dependências após o carregamento
+    const { utils } = window;
+    const { checkAuth, logout } = window.authManager;
+    const { auth, db } = window.firebaseApp;
+    
     showLoading();
 
     // Verificar autenticação
